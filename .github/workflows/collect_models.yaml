@@ -1,0 +1,35 @@
+name: Collect Hugging Face Models Count
+
+on:
+    schedule:
+        # Runs at 00:00 UTC every day
+        -   cron: '0 0 * * *'
+
+jobs:
+    collect-models:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v2
+
+            -   name: Set up Python
+                uses: actions/setup-python@v2
+                with:
+                    python-version: '3.8'
+
+            -   name: Install dependencies
+                run: |
+                    python -m pip install --upgrade pip
+                    pip install -r requirements.txt
+
+            -   name: Collect models data
+                run: python scripts/collect_hf_models.py
+
+            -   name: Commit and push if there are changes
+                run: |
+                    git config --global user.email "action@github.com"
+                    git config --global user.name "GitHub Action"
+                    git add models_over_time.json data/
+                    git commit -m "Update models count" || echo "No changes to commit"
+                    git push
