@@ -48,9 +48,9 @@ jobs:
                 run: python scripts/collect_hf_models.py
 
             -   name: Commit and push if there are changes
-                run: |
-                    git config --global user.email "action@github.com"
-                    git config --global user.name "GitHub Action"
-                    git add models_over_time.json data/
-                    git commit -m "Update models count" || echo "No changes to commit"
-                    git push
+                uses: stefanzweifel/git-auto-commit-action@v4
+                with:
+                    commit_message: "chore: update models count"
+                    commit_options: "--no-verify"
+                    branch: main
+                    token: ${{ secrets.GH_TOKEN }}
