@@ -1,6 +1,22 @@
 name: Collect Hugging Face Models Count
 
 on:
+    workflow_dispatch:
+        inputs:
+          logLevel:
+            description: 'Log level'
+            required: false
+            default: 'warning'
+            type: choice
+            options:
+            - info
+            - warning
+            - debug
+          tags:
+            description: 'Test scenario tags'
+            required: false
+            type: boolean
+
     schedule:
         # Runs at 00:00 UTC every day
         -   cron: '0 0 * * *'
@@ -8,6 +24,7 @@ on:
         paths:
             - .github/workflows
             - scripts/
+        
 
 jobs:
     collect-models:
